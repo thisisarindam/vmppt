@@ -23,7 +23,7 @@ def scan_store():
         return jsonify({"error": "No images provided"}), 400
 
     try:
-        model = genai.GenerativeModel('gemini-1.5-flash-latest')
+        model = genai.GenerativeModel('gemini-flash-latest')
         
         # Format images for Gemini
         parts = []
