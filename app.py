@@ -6,7 +6,7 @@ import google.generativeai as genai
 
 app = Flask(__name__)
 # Crucial: This allows your GitHub Pages HTML to talk to your Render Python server
-CORS(app) 
+CORS(app, resources={r"/api/*": {"origins": "https://thisisarindam.github.io"}}) 
 
 # Configure Gemini (Render will securely inject this from your dashboard)
 api_key = os.environ.get("GEMINI_API_KEY")
