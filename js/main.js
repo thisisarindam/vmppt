@@ -188,19 +188,37 @@ async function startScan() {
     
     setProg('Complete!', 100);
     
-    // 4. Render the returned JSON to the screen
-    document.getElementById('summaryText').textContent = JSON.stringify(resultData, null, 2);
+// 4. Render the returned JSON to the screen
+    const reportDiv = document.getElementById('summaryText'); // Assuming this is your container
     
-    setTimeout(() => {
-      prog.classList.remove('show');
-      document.getElementById('resultsSection').classList.add('show');
-    }, 500);
+    // Build the Executive Summary
+    let htmlContent = `
+        <div style="background: #2a2a2a; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+            <h3 style="color: #ff8c00; margin-top: 0;">AI Executive Summary</h3>
+            <p style="color: #ffffff; line-height: 1.6;">${resultData.summary}</p>
+        </div>
+        <h3 style="color: #ff8c00;">Detailed Parameter Breakdown</h3>
+    `;
 
-  } catch(err) {
-    showError(err.message);
-    prog.classList.remove('show');
-  }
+    // Loop through every VM category (facade, layout, etc.)
+    resultData.categories.forEach(category => {
+        htmlContent += `<div style="background: #1e1e1e; padding: 15px; border-radius: 5px; margin-bottom: 10px; border-left: 4px solid #4CAF50;">`;
+        htmlContent += `<h4 style="color: #ffffff; text-transform: uppercase; margin-top: 0;">${category.id}</h4>`;
+        
+        category.params.forEach(param => {
+            let statusColor = '#888'; // Default gray for NA
+            if (param.status === 'PASS') statusColor = '#4CAF50'; // Green
+            if (param.status === 'FAIL') statusColor = '#F44336'; // Red
+            
+            htmlContent += `
+                <p style="color: #ccc; margin-bottom: 5px;">
+                    <span style="background: ${statusColor}; color: white; padding: 3px 8px; border-radius: 3px; font-weight: bold; margin-right: 10px;">${param.status}</span>
+                    ${param.note}
+                </p>
+            `;
+        });
+        htmlContent += `</div>`;
+    });
 
-  btn.disabled = false;
-  btn.textContent = 'Scan & Analyse';
-}
+    // Inject the painted HTML
+    reportDiv.innerHTML = htmlContent;
