@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VM Compliance Scanner</title>
+  
+  <link rel="stylesheet" href="./css/main.css">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
+  
+  <script src="./js/main.js" defer></script>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <span class="app-tag">Retail VM Audit Tool</span>
+    <h1 class="app-title">VM Compliance Scanner</h1>
+    <p class="app-subtitle">Upload your store PPT, PDF, or Images. The system will securely process and generate a report.</p>
+  </div>
+</div>
+
+<div class="main">
+  <div class="input-card">
+    <div class="section-label">📋 Store Details</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Store Name</label>
+        <input type="text" id="storeName" placeholder="e.g. CITISTYLE Kolkata">
+      </div>
+      <div class="form-group">
+        <label>Pazo No.</label>
+        <input type="text" id="pazoNo" placeholder="e.g. PZ-20251126">
+      </div>
+    </div>
+
+    <div class="section-label">📂 Upload Files</div>
+    <div class="error-box" id="errorBox"></div>
+    <div class="upload-zone" id="uploadZone">
+      <div class="upload-icon">📁</div>
+      <div class="upload-title" id="uploadTitle">Drag & drop your files here</div>
+      <div class="upload-hint">Accepts .PPTX, .PDF, or .JPG/.PNG images. Images will be extracted locally.</div>
+      <div class="file-list" id="fileList"></div>
+      <div class="browse-btn" id="browseBtn">Browse Files</div>
+    </div>
+    <input type="file" id="filePicker" style="display:none" multiple>
+
+    <button class="scan-btn" id="scanBtn" disabled>Scan & Analyse</button>
+  </div>
+
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-label" id="progressLabel">Preparing…</div>
+    <div class="progress-sub" id="progressSub"></div>
+    <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill"></div></div>
+  </div>
+
+  <div class="results-section" id="resultsSection">
+    <div class="results-header">
+      <div class="results-title">Store Report</div>
+    </div>
+    <div class="summary-box">
+      <div class="summary-text" id="summaryText">Results will appear here based on backend processing.</div>
+    </div>
+    <div class="category-grid" id="categoryGrid">
+      </div>
+  </div>
+</div>
+
+</body>
+</html>
