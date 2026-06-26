@@ -162,20 +162,15 @@ async function startScan() {
     const payloadImages = [];
     for (let img of allImages) {
       const resized = await resizeImage(img.src);
-      // Strip the base64 header to save space
       payloadImages.push({ slide: img.slide, b64: resized.split(',')[1] }); 
     }
 
-    // 3. Send securely to YOUR backend
+    // 3. Send securely to backend
     setProg('Uploading to secure server...', 70);
     document.getElementById('progressSub').textContent = 'Waiting for queue processing...';
 
     const payload = { storeName, pazoNo, images: payloadImages };
     
-    /* =========================================
-      IMPORTANT: POINT THIS TO YOUR RENDER APP
-      =========================================
-    */
     const response = await fetch('https://vmppt.onrender.com/api/scan', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -188,31 +183,29 @@ async function startScan() {
     
     setProg('Complete!', 100);
     
-// 4. Render the returned JSON to the screen
-    const reportDiv = document.getElementById('summaryText'); // Assuming this is your container
+    // 4. Render the dynamic report HTML to the screen
+    const reportDiv = document.getElementById('summaryText');
     
-    // Build the Executive Summary
     let htmlContent = `
         <div style="background: #2a2a2a; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
             <h3 style="color: #ff8c00; margin-top: 0;">AI Executive Summary</h3>
-            <p style="color: #ffffff; line-height: 1.6;">${resultData.summary}</p>
+            <p style="color: #ffffff; line-height: 1.6; text-align: left;">${resultData.summary}</p>
         </div>
-        <h3 style="color: #ff8c00;">Detailed Parameter Breakdown</h3>
+        <h3 style="color: #ff8c00; text-align: left;">Detailed Parameter Breakdown</h3>
     `;
 
-    // Loop through every VM category (facade, layout, etc.)
     resultData.categories.forEach(category => {
-        htmlContent += `<div style="background: #1e1e1e; padding: 15px; border-radius: 5px; margin-bottom: 10px; border-left: 4px solid #4CAF50;">`;
-        htmlContent += `<h4 style="color: #ffffff; text-transform: uppercase; margin-top: 0;">${category.id}</h4>`;
+        htmlContent += `<div style="background: #1e1e1e; padding: 15px; border-radius: 5px; margin-bottom: 10px; border-left: 4px solid #ff8c00; text-align: left;">`;
+        htmlContent += `<h4 style="color: #ffffff; text-transform: uppercase; margin-top: 0; margin-bottom: 10px;">${category.id}</h4>`;
         
         category.params.forEach(param => {
-            let statusColor = '#888'; // Default gray for NA
-            if (param.status === 'PASS') statusColor = '#4CAF50'; // Green
-            if (param.status === 'FAIL') statusColor = '#F44336'; // Red
+            let statusColor = '#888'; 
+            if (param.status === 'PASS') statusColor = '#4CAF50'; 
+            if (param.status === 'FAIL') statusColor = '#F44336'; 
             
             htmlContent += `
-                <p style="color: #ccc; margin-bottom: 5px;">
-                    <span style="background: ${statusColor}; color: white; padding: 3px 8px; border-radius: 3px; font-weight: bold; margin-right: 10px;">${param.status}</span>
+                <p style="color: #ccc; margin-bottom: 5px; font-size: 14px;">
+                    <span style="background: ${statusColor}; color: white; padding: 20px 8px; display: inline-block; line-height: 0; border-radius: 3px; font-weight: bold; margin-right: 10px; min-width: 50px; text-align: center;">${param.status}</span>
                     ${param.note}
                 </p>
             `;
@@ -220,5 +213,18 @@ async function startScan() {
         htmlContent += `</div>`;
     });
 
-    // Inject the painted HTML
     reportDiv.innerHTML = htmlContent;
+    
+    setTimeout(() => {
+      prog.classList.remove('show');
+      document.getElementById('resultsSection').classList.add('show');
+    }, 500);
+
+  } catch(err) {
+    showError(err.message);
+    prog.classList.remove('show');
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Scan & Analyse';
+}
