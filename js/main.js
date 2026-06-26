@@ -176,7 +176,7 @@ async function startScan() {
       IMPORTANT: POINT THIS TO YOUR RENDER APP
       =========================================
     */
-    const response = await fetch('https://YOUR_PYTHON_BACKEND.onrender.com/api/scan', {
+    const response = await fetch('https://vmppt.onrender.com/api/scan', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
