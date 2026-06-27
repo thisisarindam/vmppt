@@ -1,3 +1,4 @@
+import gc
 import os
 import json
 from flask import Flask, request, jsonify
@@ -48,6 +49,9 @@ def scan_store():
         """
         parts.append(prompt)
 
+        # Clear out processed image scraps from tiny 512MB server RAM
+        gc.collect()
+        
         # Fire the request to Google
         response = model.generate_content(parts)
 
